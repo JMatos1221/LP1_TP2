@@ -16,10 +16,7 @@ namespace Felli
                 }
             }
 
-            for (int i = 0; i < 3; i++)
-            {
-                this.Coordinates[2, i] = new Piece(Player.None);
-            }
+            this.Coordinates[2, 1] = new Piece(Player.None);
 
             for (int i = 3; i < 5; i++)
             {
@@ -32,9 +29,14 @@ namespace Felli
 
         public void Print()
         {
+            Console.WriteLine("      [1]   [2]   [3]");
+            Console.WriteLine("     ----------------");
+
             for (int i = 0; i < 5; i++)
             {
-                if (i == 1 | i == 3) Console.Write("   ");
+                Console.Write($"[{Convert.ToChar(i + 65)}] | ");
+
+                if (i == 1 | i == 3) Console.Write("   "); 
 
                 for (int j = 0; j < 3; j++)
                 {
@@ -47,8 +49,7 @@ namespace Felli
                 }
                 Console.WriteLine();
             }
-
-
+            Console.WriteLine("     ----------------\n");
         }
 
         public void MovePiece(
