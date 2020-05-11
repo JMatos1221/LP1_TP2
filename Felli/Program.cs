@@ -6,7 +6,8 @@ namespace Felli
     {
         static void Main(string[] args)
         {
-
+            bool run = true;
+            ushort row, col, rowm, colm;
             string command;
             Player playerA, playerB, currentPlayer;
 
@@ -62,7 +63,73 @@ namespace Felli
 
             } while (true);
 
-            GameBoard.Print();
+            while (run)
+            {
+                Console.WriteLine($"Turn: {currentPlayer}\n");
+
+                GameBoard.Print();
+
+                Console.Write("Where do you wanna move? ");
+                command = Console.ReadLine();
+
+                if (command.Length == 5)
+                {
+                    row = Convert.ToUInt16(command[0]);
+                    col = Convert.ToUInt16(command[1]);
+                    rowm = Convert.ToUInt16(command[3]);
+                    colm = Convert.ToUInt16(command[4]);
+                    row -= 65;
+                    col -= 49;
+                    rowm -= 65;
+                    colm -= 49;
+
+                    if (row >= 0 & row <= 4 & rowm >= 0 & rowm <= 4 &
+                        col >= 0 & col <= 2 & colm >= 0 & colm <= 2)
+                    {
+                        if (!(row == 2 & (col == 0 | col == 2) & rowm == 2 & (colm == 0 | colm == 2)))
+                        {
+                            if ((MathF.Abs(row - rowm) == 1 & MathF.Abs(col - colm) == 1) |
+                                (MathF.Abs(row - rowm) == 1 & col - colm == 0) |
+                                row - rowm == 0 & MathF.Abs(col - colm) == 1)
+                            {
+                                if (GameBoard.CoordinateColor(row, col) == currentPlayer)
+                                {
+                                    if (GameBoard.CoordinateColor(rowm, colm) == Player.None)
+                                    {
+                                        GameBoard.MovePiece(currentPlayer, row, col, rowm, colm);
+                                        if (currentPlayer == playerA) currentPlayer = playerB;
+                                        else currentPlayer = playerA;
+                                    }
+                                    else Console.WriteLine("Invalid Input");
+                                }
+                                else Console.WriteLine("Invalid Input");
+                            }
+
+                            else if ((MathF.Abs(row - rowm) == 2 & MathF.Abs(col - colm) == 2) |
+                                    (MathF.Abs(row - rowm) == 2 & col - colm == 0) |
+                                    row - rowm == 0 & MathF.Abs(col - colm) == 2)
+                            {
+                                if (GameBoard.CoordinateColor(row, col) == currentPlayer &
+                                    GameBoard.CoordinateColor(row + (rowm - row) / 2, col + (colm - col) / 2) !=
+                                    (currentPlayer & Player.None))
+                                {
+                                    GameBoard.MoveEatPiece(currentPlayer, row, col, rowm, colm);
+                                    if (currentPlayer == playerA) currentPlayer = playerB;
+                                    else currentPlayer = playerA;
+                                }
+                            }
+
+                            else Console.WriteLine("Invalid Input");
+                        }
+
+                        else Console.WriteLine("Invalid Input");
+                    }
+                    else Console.WriteLine("Invalid Input");
+                }
+                else Console.WriteLine("Invalid Input.");
+
+                run = GameBoard.Check(GameBoard);
+            }
         }
 
         private static void PrintInstructions()

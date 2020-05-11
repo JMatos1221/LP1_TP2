@@ -11,9 +11,9 @@ namespace Felli
         {
             this.color = color;
 
-            if(this.color == Player.Black) blackPieces +=1;
+            if (this.color == Player.Black) blackPieces += 1;
 
-            if(this.color == Player.White) whitePieces +=1;
+            if (this.color == Player.White) whitePieces += 1;
         }
 
         public Player GetColor()
@@ -24,6 +24,26 @@ namespace Felli
         public void SetColor(Player color)
         {
             this.color = color;
+        }
+
+        public static int GetBPieces()
+        {
+            return blackPieces;
+        }
+
+        public static int GetWPieces()
+        {
+            return whitePieces;
+        }
+
+        public static void RemoveBPiece()
+        {
+            blackPieces -= 1;
+        }
+
+        public static void RemoveWPiece()
+        {
+            whitePieces -= 1;
         }
     }
 }
