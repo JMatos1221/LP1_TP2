@@ -4,20 +4,26 @@ namespace Felli
 {
     class Program
     {
+        /// <summary>
+        /// Main function, the program starts here
+        /// </summary>
+        /// <param name="args">Command line arguments</param>
         static void Main(string[] args)
         {
+            //Main variables declaration
             bool run = true;
             ushort row, col, rowm, colm;
             string command;
             Player playerA, playerB, currentPlayer;
 
+            //Creating the Game Board
             Board GameBoard = new Board();
 
+            //Printing Instruction
             PrintInstructions();
 
             do
             {
-
                 Console.Write("What color is Player A? [Black] [White]: ");
                 command = Console.ReadLine();
                 command = Simplify(command);
@@ -65,7 +71,7 @@ namespace Felli
 
             while (run)
             {
-                Console.WriteLine($"Turn: {currentPlayer}\n");
+                Console.WriteLine($"\nTurn: {currentPlayer} [{(int)currentPlayer}]");
 
                 GameBoard.Print();
 
@@ -84,9 +90,9 @@ namespace Felli
                     colm -= 49;
 
                     if (row >= 0 & row <= 4 & rowm >= 0 & rowm <= 4 &
-                        col >= 0 & col <= 2 & colm >= 0 & colm <= 2)
+                        col >= 0 & col <= 4 & colm >= 0 & colm <= 4)
                     {
-                        if (!(row == 2 & (col == 0 | col == 2) & rowm == 2 & (colm == 0 | colm == 2)))
+                        if (!(GameBoard.Coordinate(row, col) == null | GameBoard.Coordinate(rowm, colm) == null))
                         {
                             if ((MathF.Abs(row - rowm) == 1 & MathF.Abs(col - colm) == 1) |
                                 (MathF.Abs(row - rowm) == 1 & col - colm == 0) |
@@ -117,42 +123,65 @@ namespace Felli
                                     if (currentPlayer == playerA) currentPlayer = playerB;
                                     else currentPlayer = playerA;
                                 }
+                                else Console.WriteLine("Invalid Input");
                             }
-
                             else Console.WriteLine("Invalid Input");
                         }
-
                         else Console.WriteLine("Invalid Input");
                     }
                     else Console.WriteLine("Invalid Input");
                 }
-                else Console.WriteLine("Invalid Input.");
+                else
+                {
+                    command = Simplify(command);
+
+                    if (command == "help") PrintInstructions();
+
+                    else if (command == "quit")
+                    {
+                        Console.WriteLine("\nThe game will now quit.");
+                        break;
+                    }
+
+                    else Console.WriteLine("Invalid Input.");
+                }
 
                 run = GameBoard.Check(GameBoard);
             }
+
+            GameBoard.Print();
+
+            if (Board.GetWinner() == playerA) Console.Write($"Player A ({playerA}) Wins!");
+
+            else Console.Write($"Player B ({playerB}) Wins!");
+
         }
 
         private static void PrintInstructions()
         {
-            Console.WriteLine("Welcome to Felli!");
+            Console.WriteLine("\nWelcome to Felli!");
             Console.WriteLine("How to play:");
             Console.WriteLine("First the players decide what color(number)" +
-            " they wanna play as by typing: black/white or 1/2");
+                " they wanna play as by typing: black/white or 1/2");
             Console.WriteLine("Then, the players decide who starts the game" +
-            " by typing: A or B");
-            Console.WriteLine("");
+                " by typing: A or B");
+            Console.WriteLine("To move your piece simply type the coordinate" +
+                " of your piece and the coordinate to where you want" +
+                " to move it e.g. C2 D2");
             Console.WriteLine("The Rules are simple:");
             Console.WriteLine("Each player has six pieces on their" +
-            " respective triangle");
+                " respective triangle");
             Console.WriteLine("Each turn, a piece is moved to a empty space" +
-             " in any direction");
+                " in any direction");
             Console.WriteLine(@"You can ""eat"" enemy pieces by hopping over" +
-            "them to an empty space");
+                "them to an empty space");
             Console.WriteLine("You can either move or eat once per turn");
             Console.WriteLine("Players alternate turns until one of the" +
-            " players has no more pieces on the board");
+                " players has no more pieces on the board");
             Console.WriteLine("The player with no pieces on the board loses" +
-            "the game\n");
+                " the game");
+            Console.WriteLine("To print this menu again type help");
+            Console.WriteLine("To leave the game type quit\n");
         }
 
         private static string Simplify(string s)
